@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <link rel="stylesheet" href="styles.css">
+
+    <title>My To-Do List</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>My To-Do List</h1>
+
+        <!-- Task Form -->
+        <div class="task-form">
+
+            <!-- Task Name -->
+            <div class="form-group">
+                <label for="taskInput">
+                    Task
+                </label>
+
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="Enter a task"
+                >
+            </div>
+
+
+            <!-- Deadline -->
+            <div class="form-group">
+                <label for="deadlineInput">
+                    Deadline
+                </label>
+
+                <input
+                    type="date"
+                    id="deadlineInput"
+                >
+            </div>
+
+
+            <!-- Priority -->
+            <div class="form-group">
+                <label for="priorityInput">
+                    Priority
+                </label>
+
+                <select id="priorityInput">
+
+                    <option value="1">
+                        1 - High
+                    </option>
+
+                    <option value="2">
+                        2 - Medium
+                    </option>
+
+                    <option value="3">
+                        3 - Low
+                    </option>
+
+                </select>
+            </div>
+
+
+            <!-- Status -->
+            <div class="form-group">
+                <label for="statusInput">
+                    Status
+                </label>
+
+                <select id="statusInput">
+
+                    <option value="Pending">
+                        Pending
+                    </option>
+
+                    <option value="In Progress">
+                        In Progress
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                </select>
+            </div>
+
+
+            <!-- Add Button -->
+            <button id="addButton">
+                Add Task
+            </button>
+
+        </div>
+
+
+        <!-- Task List -->
+        <div class="tasks-section">
+
+            <h2>Tasks</h2>
+
+            <ul id="taskList">
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
