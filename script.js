@@ -1,4 +1,12 @@
-const API_URL = "http://localhost:3000/tasks";
+let tasks = [
+    {
+        title: "Dl internals",
+        deadline: "2026-09-07",
+        priority: 1,
+        status: "Completed",
+        id: "seed-task"
+    }
+];
 
 // Get HTML elements
 const taskInput = document.getElementById("taskInput");
@@ -9,37 +17,7 @@ const addButton = document.getElementById("addButton");
 const taskList = document.getElementById("taskList");
 
 // Load tasks when the page opens
-loadTasks();
-
-// LOAD TASKS
-
-async function loadTasks() {
-
-    try {
-
-        const response = await fetch(API_URL);
-
-        if (!response.ok) {
-            throw new Error("Could not load tasks");
-        }
-
-        const tasks = await response.json();
-
-        displayTasks(tasks);
-
-    } catch (error) {
-
-        console.error(error);
-
-        taskList.innerHTML = `
-            <li class="task-item">
-                <strong>Unable to load tasks.</strong>
-                <br>
-                Make sure JSON Server is running.
-            </li>
-        `;
-    }
-}
+displayTasks(tasks);
 
 // DISPLAY TASKS
 
@@ -183,7 +161,7 @@ function getPriorityText(priority) {
 
 addButton.addEventListener("click", addTask);
 
-async function addTask() {
+function addTask() {
 
     const title = taskInput.value.trim();
 
@@ -216,52 +194,27 @@ async function addTask() {
 
     };
 
-    try {
+    taskInput.value = "";
 
-        const response = await fetch(API_URL, {
+    deadlineInput.value = "";
 
-            method: "POST",
+    priorityInput.value = "1";
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+    statusInput.value = "Pending";
 
-            body: JSON.stringify(newTask)
+    tasks.push({
+        ...newTask,
+        id: `task-${Date.now()}`
+    });
 
-        });
-
-        if (!response.ok) {
-
-            throw new Error("Could not add task");
-
-        }
-
-        // Clear form
-        taskInput.value = "";
-
-        deadlineInput.value = "";
-
-        priorityInput.value = "1";
-
-        statusInput.value = "Pending";
-
-        // Reload tasks
-        loadTasks();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Could not add task.");
-
-    }
+    displayTasks(tasks);
 }
 
 // ==========================================
 // DELETE TASK
 // ==========================================
 
-async function deleteTask(taskId) {
+function deleteTask(taskId) {
 
     const confirmDelete = confirm(
         "Are you sure you want to delete this task?"
@@ -271,35 +224,16 @@ async function deleteTask(taskId) {
         return;
     }
 
-    try {
+    tasks = tasks.filter(function(task) {
+        return task.id !== taskId;
+    });
 
-        const response = await fetch(
-            `${API_URL}/${taskId}`,
-            {
-                method: "DELETE"
-            }
-        );
-
-        if (!response.ok) {
-
-            throw new Error("Could not delete task");
-
-        }
-
-        loadTasks();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Could not delete task.");
-
-    }
+    displayTasks(tasks);
 }
 
 // EDIT TASK
 
-async function editTask(task) {
+function editTask(task) {
 
     const newTitle = prompt(
         "Edit task:",
@@ -358,39 +292,13 @@ async function editTask(task) {
         status: task.status
 
     };
-    try {
-
-        const response = await fetch(
-            `${API_URL}/${task.id}`,
-            {
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(updatedTask)
-            }
-        );
-        if (!response.ok) {
-
-            throw new Error("Could not edit task");
-
-        }
-        loadTasks();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Could not edit task.");
-
-    }
+    Object.assign(task, updatedTask);
+    displayTasks(tasks);
 }
 
 // CHANGE STATUS
 
-async function changeStatus(task) {
+function changeStatus(task) {
 
     let newStatus;
 
@@ -408,46 +316,6 @@ async function changeStatus(task) {
 
     }
 
-    const updatedTask = {
-
-        title: task.title,
-
-        deadline: task.deadline,
-
-        priority: task.priority,
-
-        status: newStatus
-
-    };
-
-    try {
-
-        const response = await fetch(
-            `${API_URL}/${task.id}`,
-            {
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(updatedTask)
-            }
-        );
-
-        if (!response.ok) {
-
-            throw new Error("Could not update status");
-
-        }
-
-        loadTasks();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Could not update status.");
-
-    }
+    task.status = newStatus;
+    displayTasks(tasks);
 }
